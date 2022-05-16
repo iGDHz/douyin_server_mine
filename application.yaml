@@ -1,0 +1,16 @@
+server:
+  port: 8878
+
+datasource:
+  drivername: mysql
+  user: root
+  password: qzzx91112
+  protocol: tcp
+  host: 127.0.0.1
+  port: 3306
+  name: douyin_utf8
+  args:
+    -
+      parseTime=True
+    -
+      charset=utf8
