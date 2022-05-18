@@ -13,8 +13,8 @@ func CreateToken(userid int) string {
 	return hex.EncodeToString(MD5.Sum(nil))
 }
 
-func CreatePassword(password string) string {
+func EncryptString(str string) string {
 	MD5 := md5.New()
-	MD5.Write([]byte(password))
+	MD5.Write([]byte(str))
 	return hex.EncodeToString(MD5.Sum(nil))
 }

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"log"
@@ -13,7 +12,7 @@ var Database *gorm.DB
 func init() {
 	db_driver, dsn := getDsn("datasource")
 	log.Println("数据库驱动:" + db_driver)
-	log.Println("DSN:" + dsn)
+	log.Println("DSN:\"" + dsn + "\"")
 	switch db_driver {
 	case "mysql":
 		{
@@ -41,7 +40,6 @@ func getDsn(pre string) (string, string) {
 	if args != nil {
 		dsn = dsn + "?" + strings.Join(args, "&&")
 	}
-	fmt.Println("%v", args)
 	return drivername, dsn
 	//args = args.(map[string]{})
 }

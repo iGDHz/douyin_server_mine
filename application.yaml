@@ -18,3 +18,10 @@ datasource:
 redis:
   port: 6379
   DB: 0
+
+resources:
+  video:
+    path: D:\Hz_go\github\douyin_mine\video
+  picture:
+    path: D:\Hz_go\github\douyin_mine\video
+    defaultrelativepath: 0\0\default.jpg

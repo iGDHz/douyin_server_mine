@@ -2,19 +2,16 @@ package controller
 
 import (
 	. "douyin_mine/config"
+	"douyin_mine/service"
+	. "douyin_mine/service"
 	"douyin_mine/utils"
 	"github.com/go-redis/redis/v8"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 	"log"
+	"strconv"
 	"time"
 )
-
-type User struct {
-	User_Id       int    `gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
-	User_Name     string `gorm:"size:32"`
-	User_Password string `gorm:"size:256"`
-}
 
 type registerResponse struct {
 	statusResponse
@@ -30,7 +27,7 @@ type loginResponse struct {
 
 type getUserResponse struct {
 	statusResponse
-	UserResponse
+	service.UserJSON
 }
 
 type UserResponse struct {
@@ -42,16 +39,16 @@ type UserResponse struct {
 }
 
 type statusResponse struct {
-	Status_Code int    `json:"Status_Code"`
-	Status_Msg  string `json:"Status_Msg,omitempty"`
+	Status_Code int    `json:"Status_code"`
+	Status_Msg  string `json:"Status_msg,omitempty"`
 }
 
 type UserController struct {
 }
 
 func (uc *UserController) PostRegister(ctx iris.Context) mvc.Result {
-	username := ctx.FormValue("username")
-	password := ctx.FormValue("password")
+	username := ctx.URLParam("username")
+	password := ctx.URLParam("password")
 	if username == "" || password == "" {
 		return mvc.Response{
 			Object: registerResponse{
@@ -68,7 +65,7 @@ func (uc *UserController) PostRegister(ctx iris.Context) mvc.Result {
 	var user *User
 	log.Println("查找用户 : " + username)
 	Database.Where("user_name = ?", username).First(&user)
-	if user != nil {
+	if user.User_Name != "" {
 		log.Println("用户已存在")
 		return mvc.Response{
 			Object: registerResponse{
@@ -83,13 +80,17 @@ func (uc *UserController) PostRegister(ctx iris.Context) mvc.Result {
 	}
 	user = &User{
 		User_Name:     username,
-		User_Password: utils.CreatePassword(password),
+		User_Password: utils.EncryptString(password),
 	}
 
 	Database.Create(&user)
 	token := utils.CreateToken(user.User_Id)
 	log.Println("创建用户 : " + username + " 用户token:" + token)
-	Rdb.Set(RdbContext, token, user.User_Id, 30*time.Minute)
+	err := Rdb.Set(RdbContext, token, user.User_Id, 30*time.Minute).Err()
+	if err != nil {
+		log.Println("Redis数据库出错")
+		panic(err)
+	}
 	return mvc.Response{
 		Object: registerResponse{
 			statusResponse: statusResponse{
@@ -103,8 +104,8 @@ func (uc *UserController) PostRegister(ctx iris.Context) mvc.Result {
 }
 
 func (uc *UserController) PostLogin(ctx iris.Context) mvc.Result {
-	username := ctx.FormValue("username")
-	password := ctx.FormValue("password")
+	username := ctx.URLParam("username")
+	password := ctx.URLParam("password")
 
 	//查找用户
 	var user *User
@@ -121,8 +122,8 @@ func (uc *UserController) PostLogin(ctx iris.Context) mvc.Result {
 	}
 
 	//验证用户密码
-	pwdMd5 := utils.CreatePassword(password)
-	if pwdMd5 != password {
+	pwdMd5 := utils.EncryptString(password)
+	if pwdMd5 != user.User_Password {
 		return mvc.Response{
 			Object: loginResponse{
 				statusResponse: statusResponse{
@@ -135,7 +136,11 @@ func (uc *UserController) PostLogin(ctx iris.Context) mvc.Result {
 
 	//生成token并存入redis
 	token := utils.CreateToken(user.User_Id)
-	Rdb.Set(RdbContext, token, user.User_Id, 30*time.Minute)
+	err := Rdb.Set(RdbContext, token, user.User_Id, 30*time.Minute).Err()
+	if err != nil {
+		log.Println("Redis数据库出错")
+		panic(err)
+	}
 	return mvc.Response{
 		Object: loginResponse{
 			statusResponse: statusResponse{
@@ -151,44 +156,30 @@ func (uc *UserController) PostLogin(ctx iris.Context) mvc.Result {
 func (uc *UserController) Get(ctx iris.Context) mvc.Result {
 	token := ctx.URLParam("token") //获取token
 	user_id := ctx.URLParam("user_id")
-	cuser_id, err := Rdb.Get(RdbContext, token).Result()
+	_, err := Rdb.Get(RdbContext, token).Result()
 	log.Println("请求用户（ID）信息" + user_id)
-	if err == redis.Nil {
+	if err == redis.Nil { //验证token是否有效
 		return mvc.Response{
 			Object: getUserResponse{
 				statusResponse: statusResponse{
 					Status_Code: 100,
+					Status_Msg:  "登录超时",
 				},
-				UserResponse: UserResponse{},
+				UserJSON: service.UserJSON{},
 			},
 		}
 	}
 	var user *User
 	Database.Where(`user_id = ?`, user_id).First(&user)
-	var follow_count, follower_count, isfllow int
-	count_row := Database.Raw("select count(*) as from `favorite` where `favorite_user_id`=?", user_id).Row()
-	count_row.Scan(&follow_count)
-	count_row = Database.Raw("select count(*) as from `favorite` where `favorite_fan_id`=?", user_id).Row()
-	count_row.Scan(&follower_count)
-	count_row = Database.Raw("select count(*) as from `favorite` where favorite_user_id`=? "+
-		"&& `favorite_fan_id`=?", cuser_id, user_id).Row()
-	count_row.Scan(&isfllow)
-	var is_follow bool
-	if isfllow != 0 {
-		is_follow = true
-	}
+
+	userIntId, _ := strconv.Atoi(user_id) //将参数转化未字符串类型
+	usermsg := GetUser(userIntId, *user)
 	return mvc.Response{
 		Object: getUserResponse{
 			statusResponse: statusResponse{
 				Status_Code: 0,
 			},
-			UserResponse: UserResponse{
-				Id:             user.User_Id,
-				name:           user.User_Name,
-				follow_count:   follow_count,
-				follower_count: follower_count,
-				is_follow:      is_follow,
-			},
+			UserJSON: usermsg,
 		},
 	}
 }

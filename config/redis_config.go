@@ -17,6 +17,7 @@ func init() {
 		Password: password,
 		DB:       db,
 	})
+
 	//	Rdb.Set(RdbContext,"key","value",time.Minute*30) 添加key-value 存活时间为30min
 	//	val, err := Rdb.Get(RdbContext, "key").Result()
 	//	if err == redis.Nil {
