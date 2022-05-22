@@ -20,25 +20,17 @@ import (
 type PublicController struct {
 }
 
-type VideoJSON struct {
-	Id             int              `json:"id"`
-	Author         service.UserJSON `json:"author"`
-	Play_url       string           `json:"play_url"`
-	Cover_url      string           `json:"cover_url"`
-	Favorite_count int              `json:"favorite_count"`
-	Comment_count  int              `json:"comment_count"`
-	Is_favorite    int              `json:"is_favorite"`
-	Title          string           `json:"title"`
-}
-
 type listResponse struct {
 	statusResponse
-	video_list []VideoJSON `json:"video_list"`
+	video_list []service.VideoJSON `json:"video_list"`
 }
+
+const FILEMAXSIZE = 5 << 20 //最多传输5M大小的文件
 
 // /public/action 投稿接口
 func (pc *PublicController) PostAction(ctx iris.Context) mvc.Result {
 	err := Rdb.Get(RdbContext, ctx.FormValue("token")).Err()
+	Log.Println(err)
 	if err == redis.Nil {
 		return mvc.Response{
 			Object: statusResponse{
@@ -48,11 +40,30 @@ func (pc *PublicController) PostAction(ctx iris.Context) mvc.Result {
 		}
 	}
 	userid := Rdb.Get(RdbContext, ctx.FormValue("token")) //根据token获取用户id
-	fmt.Println(userid)
+	Log.Println(userid)
 	title := ctx.FormValue("title")
 	f, fh, err := ctx.FormFile("data")
+	if err != nil {
+		Log.Println(err)
+		return mvc.Response{
+			Object: statusResponse{
+				Status_Code: 500,
+				Status_Msg:  "文件读取失败",
+			},
+		}
+	}
+	Log.Println("文件：" + fh.Filename + " 大小为" + strconv.Itoa(int(fh.Size)))
+	if fh.Size > FILEMAXSIZE {
+		return mvc.Response{
+			Object: statusResponse{
+				Status_Code: 400,
+				Status_Msg:  "文件超过规定大小",
+			},
+		}
+	}
 	content, err := ioutil.ReadAll(f) //读取文件
 	if err != nil {
+		Log.Println(err)
 		return mvc.Response{
 			Object: statusResponse{
 				Status_Code: 500,
@@ -61,8 +72,11 @@ func (pc *PublicController) PostAction(ctx iris.Context) mvc.Result {
 		}
 	}
 	playerurl := CreatePath(fh)
-	target, err := os.OpenFile(AppConfig.GetString("resources.video.path")+string(os.PathSeparator)+playerurl, os.O_EXCL|os.O_CREATE, 0666)
+	Log.Println("生成url:", playerurl)
+	//target, err := os.OpenFile(AppConfig.GetString("resources.video.path")+string(os.PathSeparator)+playerurl, os.O_EXCL|os.O_CREATE, 0666)
+	target, err := os.Create(AppConfig.GetString("resources.video.path") + string(os.PathSeparator) + playerurl)
 	if err != nil {
+		Log.Println(err)
 		return mvc.Response{
 			Object: statusResponse{
 				Status_Code: 502,
@@ -70,8 +84,12 @@ func (pc *PublicController) PostAction(ctx iris.Context) mvc.Result {
 			},
 		}
 	}
-	Database.AutoMigrate(&service.Video{}) //若数据库表不存在则初始化数据库表
 	target.Write(content)
+	defer target.Close()
+	//Database.AutoMigrate(&service.Video{}) //若数据库表不存在则初始化数据库表
+	//target.Write(content)
+	//target.Close()
+	f.Close()
 	var video service.Video
 	video.Video_location = playerurl
 	video.Video_authorid, _ = strconv.Atoi(userid.Val())
@@ -101,7 +119,8 @@ func (pc *PublicController) PostAction(ctx iris.Context) mvc.Result {
 // /public/list 发布列表
 func (pc *PublicController) GetList(ctx iris.Context) mvc.Result {
 	token := ctx.URLParam("token")
-	_, err := utils.CheckToken(token) //验证token是否可用
+	user_id, err := utils.CheckToken(token) //验证token是否可用
+	Log.Println("用户：" + strconv.Itoa(user_id) + "身份验证")
 	if err == redis.Nil {
 		return mvc.Response{
 			Object: listResponse{
@@ -116,7 +135,8 @@ func (pc *PublicController) GetList(ctx iris.Context) mvc.Result {
 	userid := ctx.URLParam("user_id") //获取用户id
 	var videos []service.Video
 	Database.Where("`video_authorid` = ?", userid).Order("video_latest_time DESC").Find(&videos)
-	videolist := make([]VideoJSON, 0, 30)
+	Log.Println("查询视频列表")
+	videolist := make([]service.VideoJSON, 0, 30)
 	for _, video := range videos {
 		uid, _ := strconv.Atoi(userid)
 		videolist = append(videolist, service.GetVideoJSON(uid, video))
@@ -133,6 +153,7 @@ func (pc *PublicController) GetList(ctx iris.Context) mvc.Result {
 
 //生成用户投稿文件路径
 func CreatePath(fh *multipart.FileHeader) string {
+	Log.Println("正在生成投稿文件路径")
 	now_time := time.Now()
 	year := strconv.Itoa(now_time.Year())
 	now_time.Month()
@@ -144,5 +165,6 @@ func CreatePath(fh *multipart.FileHeader) string {
 	}
 	filename := strings.ReplaceAll(uid.String(), "-", "")
 	filetype := fh.Filename[index+1:]
+	Log.Println("投稿文件路径生成成功")
 	return year + string(os.PathSeparator) + month + string(os.PathSeparator) + filename + "." + filetype
 }

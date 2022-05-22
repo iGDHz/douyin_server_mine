@@ -21,17 +21,20 @@ type UserJSON struct {
 /*
 	@parm:userid 使用用户id
 	@parm:touserid 所查询的用户id
+	@result：根据使用用户id查询被查询用户信息
 */
-func GetUser(userid int, targetuser User) UserJSON {
+func GetUser(userid, touserid int) UserJSON {
+	var userobj User
+	Database.Where(`user_id = ?`, touserid).First(&userobj)
 	var user UserJSON
-	count_row := Database.Raw("select count(*) from `favorites` where `favorite_user_id`=?", targetuser.User_Id).Row()
+	count_row := Database.Raw("select count(*) from `favorites` where `favorite_user_id`=?", touserid).Row()
 	count_row.Scan(&user.Follower_count)
-	count_row = Database.Raw("select count(*) from `favorites` where `favorite_fan_id`=?", targetuser.User_Id).Row()
+	count_row = Database.Raw("select count(*) from `favorites` where `favorite_fan_id`=?", touserid).Row()
 	count_row.Scan(&user.Follow_count)
 	count_row = Database.Raw("select count(*) from `favorites` where favorite_user_id`=? "+
-		"abd `favorite_fan_id`=?", targetuser.User_Id, userid).Row()
+		"abd `favorite_fan_id`=?", touserid, userid).Row()
 	count_row.Scan(&user.Is_follow)
-	user.Id = targetuser.User_Id
-	user.Name = targetuser.User_Name
+	user.Id = touserid
+	user.Name = userobj.User_Name
 	return user
 }

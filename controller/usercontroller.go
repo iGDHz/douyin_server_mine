@@ -32,15 +32,15 @@ type getUserResponse struct {
 
 type UserResponse struct {
 	Id             int    `json:"id"`
-	name           string `json:"name"`
-	follow_count   int    `json:"follow_count"`
-	follower_count int    `json:"follower_count"`
-	is_follow      bool   `json:"is_follow"`
+	Name           string `json:"name"`
+	Follow_count   int    `json:"follow_count,omitempty"`
+	Follower_count int    `json:"follower_count,omitempty"`
+	Is_follow      bool   `json:"is_follow,omitempty"`
 }
 
 type statusResponse struct {
-	Status_Code int    `json:"Status_code"`
-	Status_Msg  string `json:"Status_msg,omitempty"`
+	Status_Code int    `json:"status_code"`
+	Status_Msg  string `json:"status_msg,omitempty"`
 }
 
 type UserController struct {
@@ -61,9 +61,9 @@ func (uc *UserController) PostRegister(ctx iris.Context) mvc.Result {
 			},
 		}
 	}
-	Database.AutoMigrate(&User{})
+	//Database.AutoMigrate(&User{}) //若用户表不存在则初始化用户表
 	var user *User
-	log.Println("查找用户 : " + username)
+	Log.Println("查找用户 : " + username)
 	Database.Where("user_name = ?", username).First(&user)
 	if user.User_Name != "" {
 		log.Println("用户已存在")
@@ -85,10 +85,10 @@ func (uc *UserController) PostRegister(ctx iris.Context) mvc.Result {
 
 	Database.Create(&user)
 	token := utils.CreateToken(user.User_Id)
-	log.Println("创建用户 : " + username + " 用户token:" + token)
+	Log.Println("创建用户 : " + username + " 用户token:" + token)
 	err := Rdb.Set(RdbContext, token, user.User_Id, 30*time.Minute).Err()
 	if err != nil {
-		log.Println("Redis数据库出错")
+		Log.Println("Redis数据库出错")
 		panic(err)
 	}
 	return mvc.Response{
@@ -138,7 +138,7 @@ func (uc *UserController) PostLogin(ctx iris.Context) mvc.Result {
 	token := utils.CreateToken(user.User_Id)
 	err := Rdb.Set(RdbContext, token, user.User_Id, 30*time.Minute).Err()
 	if err != nil {
-		log.Println("Redis数据库出错")
+		Log.Println("Redis数据库出错")
 		panic(err)
 	}
 	return mvc.Response{
@@ -156,24 +156,23 @@ func (uc *UserController) PostLogin(ctx iris.Context) mvc.Result {
 func (uc *UserController) Get(ctx iris.Context) mvc.Result {
 	token := ctx.URLParam("token") //获取token
 	user_id := ctx.URLParam("user_id")
-	_, err := Rdb.Get(RdbContext, token).Result()
+	fromuserid, err := Rdb.Get(RdbContext, token).Result()
 	log.Println("请求用户（ID）信息" + user_id)
 	if err == redis.Nil { //验证token是否有效
 		return mvc.Response{
 			Object: getUserResponse{
 				statusResponse: statusResponse{
 					Status_Code: 100,
-					Status_Msg:  "登录超时",
+					Status_Msg:  "请先登录",
 				},
 				UserJSON: service.UserJSON{},
 			},
 		}
 	}
-	var user *User
-	Database.Where(`user_id = ?`, user_id).First(&user)
+	fromuserIntid, _ := strconv.Atoi(fromuserid)
 
-	userIntId, _ := strconv.Atoi(user_id) //将参数转化未字符串类型
-	usermsg := GetUser(userIntId, *user)
+	userIntId, _ := strconv.Atoi(user_id) //将参数转化为字符串类型
+	usermsg := GetUser(fromuserIntid, userIntId)
 	return mvc.Response{
 		Object: getUserResponse{
 			statusResponse: statusResponse{
