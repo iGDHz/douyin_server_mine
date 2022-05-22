@@ -20,18 +20,18 @@ func NewApp() *iris.Application {
 	mvc.Configure(app.Party("/douyin/user"), func(app *mvc.Application) {
 		app.Handle(new(UserController))
 	})
-	//mvc.Configure(app.Party("/douyin/favorite"), func(app *mvc.Application) {
-	//	app.Handle(new(FavoriteController))
-	//})
-	//mvc.Configure(app.Party("/douyin/comment"), func(app *mvc.Application) {
-	//	app.Handle(new(CommentController))
-	//})
+	mvc.Configure(app.Party("/douyin/favorite"), func(app *mvc.Application) {
+		app.Handle(new(FavoriteController))
+	})
+	mvc.Configure(app.Party("/douyin/comment"), func(app *mvc.Application) {
+		app.Handle(new(CommentController))
+	})
 	mvc.Configure(app.Party("/douyin/publish"), func(app *mvc.Application) {
 		app.Handle(new(PublicController))
 	})
-	//mvc.Configure(app.Party("/douyin/relation"), func(app *mvc.Application) {
-	//	app.Handle(new(RelationController))
-	//})
+	mvc.Configure(app.Party("/douyin/relation"), func(app *mvc.Application) {
+		app.Handle(new(RelationController))
+	})
 	mvc.Configure(app.Party("/douyin/feed"), func(app *mvc.Application) {
 		app.Handle(new(FeedController))
 	})

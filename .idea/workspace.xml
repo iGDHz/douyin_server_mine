@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1207eb8c-acd2-49d5-a2f0-d45c66bfdb0a" name="变更" comment="修复了一些bug">
-      <change afterPath="$PROJECT_DIR$/controller/favoriteController.go" afterDir="false" />
+    <list default="true" id="1207eb8c-acd2-49d5-a2f0-d45c66bfdb0a" name="变更" comment="评论更新">
+      <change afterPath="$PROJECT_DIR$/controller/relationcontroller.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/service/favorite.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/favoriteController.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/favoriteController.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/usercontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/usercontroller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
     </list>
@@ -140,7 +142,9 @@
     <MESSAGE value="添加静态资源获取" />
     <MESSAGE value="视频投稿和视频流处理" />
     <MESSAGE value="修复了一些bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复了一些bug" />
+    <MESSAGE value="点赞操作和点赞列表" />
+    <MESSAGE value="评论更新" />
+    <option name="LAST_COMMIT_MESSAGE" value="评论更新" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -155,12 +159,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
-          <line>66</line>
+          <line>63</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
-          <line>88</line>
+          <line>85</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -190,8 +194,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
-          <line>111</line>
+          <line>108</line>
           <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
+          <line>135</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

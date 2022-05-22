@@ -15,11 +15,6 @@ type videolistResponse struct {
 	Video_list []service.VideoJSON `json:"video_list"`
 }
 
-type watch_praise struct {
-	Praise_user_id  int
-	Praise_video_id int
-}
-
 type FavoriteController struct {
 }
 
@@ -49,7 +44,7 @@ func (fc *FavoriteController) PostAction(context iris.Context) mvc.Result {
 		}
 	}
 
-	var favorite *watch_praise
+	var favorite *service.Watch_praise
 	var exists = false
 	Database.Where("`praise_user_id` = ? and `praise_video_id` = ?", userid, videoid).First(&favorite)
 	if favorite.Praise_user_id == 0 {
@@ -65,7 +60,7 @@ func (fc *FavoriteController) PostAction(context iris.Context) mvc.Result {
 	if praise {
 		uid, _ := strconv.Atoi(userid)
 		vid, _ := strconv.Atoi(videoid)
-		Database.Create(watch_praise{
+		Database.Create(service.Watch_praise{
 			Praise_user_id:  uid,
 			Praise_video_id: vid,
 		})

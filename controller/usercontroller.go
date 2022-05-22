@@ -25,17 +25,14 @@ type loginResponse struct {
 	Token   string `json:"token,omitempty"`
 }
 
-type getUserResponse struct {
+type GetUserResponse struct {
 	statusResponse
 	service.UserJSON
 }
 
-type UserResponse struct {
-	Id             int    `json:"id"`
-	Name           string `json:"name"`
-	Follow_count   int    `json:"follow_count,omitempty"`
-	Follower_count int    `json:"follower_count,omitempty"`
-	Is_follow      bool   `json:"is_follow,omitempty"`
+type GetUserListResponse struct {
+	statusResponse
+	user_list []service.UserJSON `json:"user_list"`
 }
 
 type statusResponse struct {
@@ -109,8 +106,8 @@ func (uc *UserController) PostLogin(ctx iris.Context) mvc.Result {
 
 	//查找用户
 	var user *User
-	Database.Where("user_name = ?", username).First(&user)
-	if user == nil {
+	rowcount := Database.Where("user_name = ?", username).Find(&user).RowsAffected
+	if rowcount == 0 {
 		return mvc.Response{
 			Object: loginResponse{
 				statusResponse: statusResponse{
@@ -160,7 +157,7 @@ func (uc *UserController) Get(ctx iris.Context) mvc.Result {
 	log.Println("请求用户（ID）信息" + user_id)
 	if err == redis.Nil { //验证token是否有效
 		return mvc.Response{
-			Object: getUserResponse{
+			Object: GetUserResponse{
 				statusResponse: statusResponse{
 					Status_Code: 100,
 					Status_Msg:  "请先登录",
@@ -174,7 +171,7 @@ func (uc *UserController) Get(ctx iris.Context) mvc.Result {
 	userIntId, _ := strconv.Atoi(user_id) //将参数转化为字符串类型
 	usermsg := GetUser(fromuserIntid, userIntId)
 	return mvc.Response{
-		Object: getUserResponse{
+		Object: GetUserResponse{
 			statusResponse: statusResponse{
 				Status_Code: 0,
 			},
