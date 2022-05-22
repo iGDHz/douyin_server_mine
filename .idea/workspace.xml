@@ -4,20 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1207eb8c-acd2-49d5-a2f0-d45c66bfdb0a" name="变更" comment="视频投稿和视频流处理">
-      <change afterPath="$PROJECT_DIR$/controller/feedcontroller.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/exampledata/comment.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/service/user_test.go" afterDir="false" />
+    <list default="true" id="1207eb8c-acd2-49d5-a2f0-d45c66bfdb0a" name="变更" comment="修复了一些bug">
+      <change afterPath="$PROJECT_DIR$/controller/favoriteController.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/appconfig.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/appconfig.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/db_config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/db_config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/publishController.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/publishController.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/usercontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/usercontroller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/video.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/token.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/token.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +139,8 @@
     <MESSAGE value="添加用户信息功能API" />
     <MESSAGE value="添加静态资源获取" />
     <MESSAGE value="视频投稿和视频流处理" />
-    <option name="LAST_COMMIT_MESSAGE" value="视频投稿和视频流处理" />
+    <MESSAGE value="修复了一些bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复了一些bug" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -195,6 +187,11 @@
           <url>file://$PROJECT_DIR$/controller/publishController.go</url>
           <line>31</line>
           <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
+          <line>111</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
