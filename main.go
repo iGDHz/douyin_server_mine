@@ -27,7 +27,7 @@ func NewApp() *iris.Application {
 		app.Handle(new(CommentController))
 	})
 	mvc.Configure(app.Party("/douyin/publish"), func(app *mvc.Application) {
-		app.Handle(new(PublicController))
+		app.Handle(new(PublishController))
 	})
 	mvc.Configure(app.Party("/douyin/relation"), func(app *mvc.Application) {
 		app.Handle(new(RelationController))

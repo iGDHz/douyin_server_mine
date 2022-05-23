@@ -32,7 +32,7 @@ type GetUserResponse struct {
 
 type GetUserListResponse struct {
 	statusResponse
-	user_list []service.UserJSON `json:"user_list"`
+	User_list []service.UserJSON `json:"user_list"`
 }
 
 type statusResponse struct {

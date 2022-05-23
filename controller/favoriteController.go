@@ -20,7 +20,7 @@ type FavoriteController struct {
 
 func (fc *FavoriteController) PostAction(context iris.Context) mvc.Result {
 	token := context.URLParam("token")
-	_, err := Rdb.Get(RdbContext, token).Result() //用户id
+	userid, err := utils.CheckToken(token)
 	if err == redis.Nil {
 		return mvc.Response{
 			Object: statusResponse{
@@ -29,7 +29,7 @@ func (fc *FavoriteController) PostAction(context iris.Context) mvc.Result {
 			},
 		}
 	}
-	userid := context.URLParam("user_id")          //用户id
+	//用户id
 	videoid := context.URLParam("video_id")        //视频id
 	action_type := context.URLParam("action_type") //1为点赞 2为取消赞
 	var praise bool
@@ -50,7 +50,7 @@ func (fc *FavoriteController) PostAction(context iris.Context) mvc.Result {
 	if rowcount != 0 {
 		exists = true
 	}
-	//但点赞操作已经存在点赞列表
+	//当点赞操作已经存在点赞列表
 	if exists == praise {
 		return mvc.Response{Object: statusResponse{
 			Status_Code: 400,
@@ -58,10 +58,9 @@ func (fc *FavoriteController) PostAction(context iris.Context) mvc.Result {
 		}}
 	}
 	if praise {
-		uid, _ := strconv.Atoi(userid)
 		vid, _ := strconv.Atoi(videoid)
 		Database.Create(service.Watch_praise{
-			Praise_user_id:  uid,
+			Praise_user_id:  userid,
 			Praise_video_id: vid,
 		})
 	} else {

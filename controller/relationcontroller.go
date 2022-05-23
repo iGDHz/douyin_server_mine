@@ -15,7 +15,7 @@ type RelationController struct {
 
 func (rc *RelationController) PostAction(context iris.Context) mvc.Result {
 	token := context.URLParam("token")
-	_, err := Rdb.Get(RdbContext, token).Result() //用户id
+	userid, err := utils.CheckToken(token) //用户id
 	if err == redis.Nil {
 		return mvc.Response{
 			Object: statusResponse{
@@ -24,7 +24,7 @@ func (rc *RelationController) PostAction(context iris.Context) mvc.Result {
 			},
 		}
 	}
-	userid := context.URLParam("user_id")          //操作用户id
+	//操作用户id
 	touserid := context.URLParam("to_user_id")     //关注用户id
 	action_type := context.URLParam("action_type") //1为关注 2为取消关注
 	var praise bool
@@ -41,8 +41,8 @@ func (rc *RelationController) PostAction(context iris.Context) mvc.Result {
 
 	var favorite *service.Favorite
 	var exists = false
-	rowcount := Database.Where("`favorite_user_id` = ? and `favorite_fan_id` = ?", userid, touserid).First(&favorite).RowsAffected
-	if rowcount == 0 {
+	rowcount := Database.Where("`favorite_user_id` = ? and `favorite_fan_id` = ?", touserid, userid).First(&favorite).RowsAffected
+	if rowcount != 0 {
 		exists = true
 	}
 	//当用户已经关注/取消关注用户
@@ -53,11 +53,10 @@ func (rc *RelationController) PostAction(context iris.Context) mvc.Result {
 		}}
 	}
 	if praise {
-		uid, _ := strconv.Atoi(userid)
 		touid, _ := strconv.Atoi(touserid)
 		Database.Create(service.Favorite{
 			Favorite_user_id: touid,
-			Favorite_fan_id:  uid,
+			Favorite_fan_id:  userid,
 		})
 	} else {
 		Database.Delete(&favorite)
@@ -93,7 +92,7 @@ func (rc *RelationController) GetFollowList(context iris.Context) mvc.Result {
 			statusResponse: statusResponse{
 				Status_Code: 0,
 			},
-			user_list: userlist,
+			User_list: userlist,
 		},
 	}
 }
@@ -121,7 +120,7 @@ func (rc *RelationController) GetFollowerList(context iris.Context) mvc.Result {
 			statusResponse: statusResponse{
 				Status_Code: 0,
 			},
-			user_list: userlist,
+			User_list: userlist,
 		},
 	}
 }

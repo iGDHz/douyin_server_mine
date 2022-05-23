@@ -31,9 +31,10 @@ func GetUser(userid, touserid int) UserJSON {
 	count_row.Scan(&user.Follower_count)
 	count_row = Database.Raw("select count(*) from `favorites` where `favorite_fan_id`=?", touserid).Row()
 	count_row.Scan(&user.Follow_count)
-	count_row = Database.Raw("select count(*) from `favorites` where favorite_user_id`=? "+
-		"abd `favorite_fan_id`=?", touserid, userid).Row()
-	count_row.Scan(&user.Is_follow)
+	count_row = Database.Raw("select count(*) from `favorites` where `favorite_user_id`=? and `favorite_fan_id`=?", touserid, userid).Row()
+	var isfollow int
+	count_row.Scan(&isfollow)
+	user.Is_follow = isfollow == 1
 	user.Id = touserid
 	user.Name = userobj.User_Name
 	return user

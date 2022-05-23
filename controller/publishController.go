@@ -17,18 +17,18 @@ import (
 	"time"
 )
 
-type PublicController struct {
+type PublishController struct {
 }
 
 type listResponse struct {
 	statusResponse
-	video_list []service.VideoJSON `json:"video_list"`
+	Video_list []service.VideoJSON `json:"video_list"`
 }
 
 const FILEMAXSIZE = 5 << 20 //最多传输5M大小的文件
 
 // /public/action 投稿接口
-func (pc *PublicController) PostAction(ctx iris.Context) mvc.Result {
+func (pc *PublishController) PostAction(ctx iris.Context) mvc.Result {
 	err := Rdb.Get(RdbContext, ctx.FormValue("token")).Err()
 	Log.Println(err)
 	if err == redis.Nil {
@@ -116,8 +116,8 @@ func (pc *PublicController) PostAction(ctx iris.Context) mvc.Result {
 	}
 }
 
-// /public/list 发布列表
-func (pc *PublicController) GetList(ctx iris.Context) mvc.Result {
+// /publish/list 发布列表
+func (pc *PublishController) GetList(ctx iris.Context) mvc.Result {
 	token := ctx.URLParam("token")
 	user_id, err := utils.CheckToken(token) //验证token是否可用
 	Log.Println("用户：" + strconv.Itoa(user_id) + "身份验证")
@@ -128,7 +128,7 @@ func (pc *PublicController) GetList(ctx iris.Context) mvc.Result {
 					Status_Code: 100,
 					Status_Msg:  "请先登录",
 				},
-				video_list: nil,
+				Video_list: nil,
 			},
 		}
 	}
@@ -146,7 +146,7 @@ func (pc *PublicController) GetList(ctx iris.Context) mvc.Result {
 			statusResponse: statusResponse{
 				Status_Code: 0,
 			},
-			video_list: videolist,
+			Video_list: videolist,
 		},
 	}
 }

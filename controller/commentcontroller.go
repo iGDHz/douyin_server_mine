@@ -14,7 +14,7 @@ type CommentController struct {
 
 type commentResponse struct {
 	statusResponse
-	service.CommentJSON
+	Comment service.CommentJSON `json:"comment"`
 }
 
 type commentListResponse struct {
@@ -72,7 +72,7 @@ func (cc *CommentController) PostAction(context iris.Context) mvc.Result {
 					Status_Code: 0,
 					Status_Msg:  "发表成功",
 				},
-				CommentJSON: comments,
+				Comment: comments,
 			},
 		}
 	} else {
@@ -84,10 +84,18 @@ func (cc *CommentController) PostAction(context iris.Context) mvc.Result {
 						Status_Code: 0,
 						Status_Msg:  "删除成功",
 					},
-					CommentJSON: service.CommentJSON{}, //删除要返回什么数据？
+					Comment: service.CommentJSON{}, //删除要返回什么数据？
+				},
+			}
+		} else {
+			return mvc.Response{
+				Object: commentResponse{
+					statusResponse: statusResponse{
+						Status_Code: 502,
+						Status_Msg:  "从数据库删除失败",
+					},
 				},
 			}
 		}
 	}
-	return nil
 }
