@@ -12,7 +12,7 @@ import (
 
 type videolistResponse struct {
 	statusResponse
-	Video_list []service.VideoJSON `json:"video_list"`
+	Video_list []service.VideoJSON `json:"video_list,omitempty"`
 }
 
 type FavoriteController struct {
@@ -46,8 +46,8 @@ func (fc *FavoriteController) PostAction(context iris.Context) mvc.Result {
 
 	var favorite *service.Watch_praise
 	var exists = false
-	Database.Where("`praise_user_id` = ? and `praise_video_id` = ?", userid, videoid).First(&favorite)
-	if favorite.Praise_user_id == 0 {
+	rowcount := Database.Where("`praise_user_id` = ? and `praise_video_id` = ?", userid, videoid).First(&favorite).RowsAffected
+	if rowcount != 0 {
 		exists = true
 	}
 	//但点赞操作已经存在点赞列表
@@ -88,8 +88,7 @@ func (fc *FavoriteController) GetList(context iris.Context) mvc.Result {
 			},
 		}
 	}
-	var videos []service.Video
-	err = Database.Where("`video_authorid` = ?", userid).Find(&videos).Error
+	videos := service.GetFavoriteVideoList(userid)
 	if err != nil {
 		Log.Printf("%v", err)
 	}
@@ -102,7 +101,6 @@ func (fc *FavoriteController) GetList(context iris.Context) mvc.Result {
 		Object: videolistResponse{
 			statusResponse: statusResponse{
 				Status_Code: 0,
-				Status_Msg:  "ok",
 			},
 			Video_list: videolist,
 		},

@@ -44,8 +44,7 @@ func GetVideoJSON(userid int, video Video) VideoJSON {
 	row.Scan(&v.Comment_count)
 	//获取是否点赞信息
 	var ispraised bool
-	row = config.Database.Raw("select count(*) from `watch_praises` where `praise_user_id`=? and `praise_video_id`=? and `praise_ispraised`"+
-		"= TRUE", userid, video.Video_id).Row()
+	row = config.Database.Raw("select count(*) from `watch_praises` where `praise_user_id`=? and `praise_video_id`=?", userid, video.Video_id).Row()
 	row.Scan(&ispraised)
 	v.Title = video.Video_title
 	return v
