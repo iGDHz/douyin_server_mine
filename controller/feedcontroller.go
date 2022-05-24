@@ -14,12 +14,6 @@ import (
 type FeedController struct {
 }
 
-type feedResponse struct {
-	statusResponse
-	Video_list []service.VideoJSON `json:"video_list,omitempty"`
-	Next_time  int64               `json:"next_time"`
-}
-
 func (fc *FeedController) Get(context iris.Context) mvc.Result {
 	latest_time := context.URLParam("latest_time") //时间戳
 	token := context.URLParam("token")

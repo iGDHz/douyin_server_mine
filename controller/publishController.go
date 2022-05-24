@@ -20,11 +20,6 @@ import (
 type PublishController struct {
 }
 
-type listResponse struct {
-	statusResponse
-	Video_list []service.VideoJSON `json:"video_list"`
-}
-
 const FILEMAXSIZE = 5 << 20 //最多传输5M大小的文件
 
 // /public/action 投稿接口

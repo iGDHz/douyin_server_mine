@@ -4,18 +4,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1207eb8c-acd2-49d5-a2f0-d45c66bfdb0a" name="变更" comment="修复点赞功能的bug">
+    <list default="true" id="1207eb8c-acd2-49d5-a2f0-d45c66bfdb0a" name="变更" comment="能跑就行">
+      <change afterPath="$PROJECT_DIR$/controller/common.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/commentcontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/commentcontroller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/favoriteController.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/favoriteController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/feedcontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/feedcontroller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/publishController.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/publishController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/relationcontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/relationcontroller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/usercontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/usercontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/comment.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/favorite.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/favorite.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/video.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -151,7 +147,8 @@
     <MESSAGE value="评论更新" />
     <MESSAGE value="出版项目搭建" />
     <MESSAGE value="修复点赞功能的bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复点赞功能的bug" />
+    <MESSAGE value="能跑就行" />
+    <option name="LAST_COMMIT_MESSAGE" value="能跑就行" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -166,12 +163,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
-          <line>63</line>
+          <line>36</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
-          <line>85</line>
+          <line>58</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -181,32 +178,32 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/publishController.go</url>
-          <line>73</line>
+          <line>68</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/publishController.go</url>
-          <line>41</line>
+          <line>36</line>
           <option name="timeStamp" value="19" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/feedcontroller.go</url>
-          <line>23</line>
+          <line>17</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/publishController.go</url>
-          <line>31</line>
+          <line>26</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/favoriteController.go</url>
-          <line>77</line>
+          <line>72</line>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/favoriteController.go</url>
-          <line>48</line>
+          <line>43</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -216,18 +213,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/commentcontroller.go</url>
-          <line>46</line>
+          <line>36</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/commentcontroller.go</url>
-          <line>40</line>
+          <line>30</line>
           <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/controller/publishController.go</url>
-          <line>136</line>
-          <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/relationcontroller.go</url>

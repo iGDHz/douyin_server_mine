@@ -12,16 +12,6 @@ import (
 type CommentController struct {
 }
 
-type commentResponse struct {
-	statusResponse
-	Comment service.CommentJSON `json:"comment"`
-}
-
-type commentListResponse struct {
-	statusResponse
-	Comment_list []service.CommentJSON `json:"comment_list"`
-}
-
 func (cc *CommentController) GetList(context iris.Context) mvc.Result {
 	token := context.URLParam("token")
 	value, err := Rdb.Get(RdbContext, token).Result()

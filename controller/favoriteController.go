@@ -10,11 +10,6 @@ import (
 	"strconv"
 )
 
-type videolistResponse struct {
-	statusResponse
-	Video_list []service.VideoJSON `json:"video_list,omitempty"`
-}
-
 type FavoriteController struct {
 }
 
