@@ -1,8 +1,8 @@
 package controller
 
 import (
-	. "douyin_mine/config"
 	"douyin_mine/service"
+	"douyin_mine/utils"
 	"github.com/go-redis/redis/v8"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
@@ -14,14 +14,13 @@ type CommentController struct {
 
 func (cc *CommentController) GetList(context iris.Context) mvc.Result {
 	token := context.URLParam("token")
-	value, err := Rdb.Get(RdbContext, token).Result()
+	userid, err := utils.CheckToken(token)
 	if err == redis.Nil {
 		return mvc.Response{Object: statusResponse{
 			Status_Code: 100,
 			Status_Msg:  "请先登录",
 		}}
 	}
-	userid, _ := strconv.Atoi(value)
 	videoid, _ := strconv.Atoi(context.URLParam("video_id"))
 	return mvc.Response{
 		Object: commentListResponse{
@@ -35,14 +34,13 @@ func (cc *CommentController) GetList(context iris.Context) mvc.Result {
 
 func (cc *CommentController) PostAction(context iris.Context) mvc.Result {
 	token := context.URLParam("token")
-	err := Rdb.Get(RdbContext, token).Err()
+	userid, err := utils.CheckToken(token)
 	if err == redis.Nil {
 		return mvc.Response{Object: statusResponse{
 			Status_Code: 100,
 			Status_Msg:  "请先登录",
 		}}
 	}
-	userid, _ := strconv.Atoi(context.URLParam("user_id"))
 	videoid, _ := strconv.Atoi(context.URLParam("video_id"))
 	bool := context.URLParam("action_type") == "1" //bool为true时为发表评论操作
 	if bool {

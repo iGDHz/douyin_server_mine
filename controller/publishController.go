@@ -24,7 +24,8 @@ const FILEMAXSIZE = 5 << 20 //最多传输5M大小的文件
 
 // /public/action 投稿接口
 func (pc *PublishController) PostAction(ctx iris.Context) mvc.Result {
-	err := Rdb.Get(RdbContext, ctx.FormValue("token")).Err()
+	token := ctx.FormValue("token")
+	userid, err := utils.CheckToken(token)
 	Log.Println(err)
 	if err == redis.Nil {
 		return mvc.Response{
@@ -34,7 +35,6 @@ func (pc *PublishController) PostAction(ctx iris.Context) mvc.Result {
 			},
 		}
 	}
-	userid := Rdb.Get(RdbContext, ctx.FormValue("token")) //根据token获取用户id
 	Log.Println(userid)
 	title := ctx.FormValue("title")
 	f, fh, err := ctx.FormFile("data")
@@ -87,7 +87,7 @@ func (pc *PublishController) PostAction(ctx iris.Context) mvc.Result {
 	f.Close()
 	var video service.Video
 	video.Video_location = playerurl
-	video.Video_authorid, _ = strconv.Atoi(userid.Val())
+	video.Video_authorid = userid
 	video.Video_picture_location = AppConfig.GetString("resources.picture.defaultrelativepath")
 	video.Video_state = 200 //直接设置为通过不加审核
 	video.Video_title = title
@@ -114,8 +114,8 @@ func (pc *PublishController) PostAction(ctx iris.Context) mvc.Result {
 // /publish/list 发布列表
 func (pc *PublishController) GetList(ctx iris.Context) mvc.Result {
 	token := ctx.URLParam("token")
-	user_id, err := utils.CheckToken(token) //验证token是否可用
-	Log.Println("用户：" + strconv.Itoa(user_id) + "身份验证")
+	userid, err := utils.CheckToken(token) //验证token是否可用
+	Log.Println("用户：" + strconv.Itoa(userid) + "身份验证")
 	if err == redis.Nil {
 		return mvc.Response{
 			Object: listResponse{
@@ -127,14 +127,12 @@ func (pc *PublishController) GetList(ctx iris.Context) mvc.Result {
 			},
 		}
 	}
-	userid := ctx.URLParam("user_id") //获取用户id
 	var videos []service.Video
 	Database.Where("`video_authorid` = ?", userid).Order("video_latest_time DESC").Find(&videos)
 	Log.Println("查询视频列表")
 	videolist := make([]service.VideoJSON, 0, 30)
 	for _, video := range videos {
-		uid, _ := strconv.Atoi(userid)
-		videolist = append(videolist, service.GetVideoJSON(uid, video))
+		videolist = append(videolist, service.GetVideoJSON(userid, video))
 	}
 	return mvc.Response{
 		Object: listResponse{

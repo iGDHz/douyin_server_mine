@@ -37,7 +37,7 @@ func getDsn(pre string) (string, string) {
 	args := AppConfig.GetStringSlice("datasource.args")    //获取配置参数
 	dsn = strings.Join([]string{user, password, protocol, host, port, dbname}, "")
 	if args != nil {
-		dsn = dsn + "?" + strings.Join(args, "&&")
+		dsn = dsn + "?" + strings.Join(args, "&")
 	}
 	return drivername, dsn
 	//args = args.(map[string]{})

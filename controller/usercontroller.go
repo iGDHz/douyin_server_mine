@@ -126,7 +126,7 @@ func (uc *UserController) PostLogin(ctx iris.Context) mvc.Result {
 func (uc *UserController) Get(ctx iris.Context) mvc.Result {
 	token := ctx.URLParam("token") //获取token
 	user_id := ctx.URLParam("user_id")
-	fromuserid, err := Rdb.Get(RdbContext, token).Result()
+	fromuserid, err := utils.CheckToken(token)
 	log.Println("请求用户（ID）信息" + user_id)
 	if err == redis.Nil { //验证token是否有效
 		return mvc.Response{
@@ -139,10 +139,9 @@ func (uc *UserController) Get(ctx iris.Context) mvc.Result {
 			},
 		}
 	}
-	fromuserIntid, _ := strconv.Atoi(fromuserid)
 
 	userIntId, _ := strconv.Atoi(user_id) //将参数转化为字符串类型
-	usermsg := GetUser(fromuserIntid, userIntId)
+	usermsg := GetUser(fromuserid, userIntId)
 	return mvc.Response{
 		Object: GetUserResponse{
 			statusResponse: statusResponse{
