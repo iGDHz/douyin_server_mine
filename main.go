@@ -9,13 +9,16 @@ import (
 
 func main() {
 	app := NewApp()
-	app.HandleDir("/douyin/video", "./video")
-	app.HandleDir("/douyin/picture", "./picture")
+	app.HandleDir("/douyin/video", "D:\\Hz_go\\github\\douyin_mine\\video")
+	app.HandleDir("/douyin/picture", "D:\\Hz_go\\github\\douyin_mine\\picture")
 	app.Run(iris.Addr(":"+AppConfig.GetString("server.port")), iris.WithoutPathCorrectionRedirection, iris.WithCharset("UTF-8")) //监听视频端口
 }
 
 func NewApp() *iris.Application {
 	app := iris.New()
+	//app.Use(func(context iris.Context) {
+	//
+	//})
 	app.OnErrorCode(iris.StatusNotFound, notFound)
 	mvc.Configure(app.Party("/douyin/user"), func(app *mvc.Application) {
 		app.Handle(new(UserController))

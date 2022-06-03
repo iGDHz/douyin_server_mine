@@ -127,7 +127,7 @@ func (uc *UserController) Get(ctx iris.Context) mvc.Result {
 	token := ctx.URLParam("token") //获取token
 	user_id := ctx.URLParam("user_id")
 	fromuserid, err := utils.CheckToken(token)
-	log.Println("请求用户（ID）信息" + user_id)
+	Log.Println("请求用户（ID）信息" + user_id)
 	if err == redis.Nil { //验证token是否有效
 		return mvc.Response{
 			Object: GetUserResponse{

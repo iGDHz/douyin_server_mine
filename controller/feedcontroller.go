@@ -34,7 +34,7 @@ func (fc *FeedController) Get(context iris.Context) mvc.Result {
 		}
 		videolist = append(videolist, service.GetVideoJSON(userid, video))
 	}
-
+	config.Log.Printf("%v", videolist)
 	return mvc.Response{
 		Object: feedResponse{
 			statusResponse: statusResponse{

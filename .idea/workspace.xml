@@ -4,11 +4,19 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1207eb8c-acd2-49d5-a2f0-d45c66bfdb0a" name="变更" comment="简单的优化一下结构">
+    <list default="true" id="1207eb8c-acd2-49d5-a2f0-d45c66bfdb0a" name="变更" comment="将token验证提取出来">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/db_config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/db_config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controller/commentcontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/commentcontroller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/appconfig.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/appconfig.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/redis_config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/redis_config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/feedcontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/feedcontroller.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/controller/publishController.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/publishController.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/usercontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controller/usercontroller.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/douyin.sql" beforeDir="false" afterPath="$PROJECT_DIR$/db/douyin.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/comment.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/service/video.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,32 +79,57 @@
       <filePath value="$PROJECT_DIR$/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="go build douyin_mine/main" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+    <configuration name="douyin_mine 中的 TestFempeg (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="douyin_mine" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="PACKAGE" />
-      <package value="douyin_mine/main" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/main/main.go" />
-      <method v="2" />
-    </configuration>
-    <configuration name="douyin_mine/service 中的 TestUserJson" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="douyin_mine" />
-      <working_directory value="$PROJECT_DIR$/service" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="douyin_mine/service" />
+      <package value="douyin_mine" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestUserJson\E$" />
+      <pattern value="^\QTestFempeg\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="douyin_mine 中的 TestFempeg (2)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="douyin_mine" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="douyin_mine" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestFempeg\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="douyin_mine 中的 TestFempeg" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="douyin_mine" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="douyin_mine" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestFempeg\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="douyin_mine 中的 TestName" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="douyin_mine" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="douyin_mine" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestName\E$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Go 构建.go build douyin_mine" />
-        <item itemvalue="Go 测试.douyin_mine/service 中的 TestUserJson" />
-        <item itemvalue="Go 构建.go build douyin_mine/main" />
+        <item itemvalue="Go 测试.douyin_mine 中的 TestFempeg (2)" />
+        <item itemvalue="Go 测试.douyin_mine 中的 TestFempeg (1)" />
+        <item itemvalue="Go 测试.douyin_mine 中的 TestFempeg" />
+        <item itemvalue="Go 测试.douyin_mine 中的 TestName" />
       </list>
     </recent_temporary>
   </component>
@@ -146,7 +179,8 @@
     <MESSAGE value="修复点赞功能的bug" />
     <MESSAGE value="能跑就行" />
     <MESSAGE value="简单的优化一下结构" />
-    <option name="LAST_COMMIT_MESSAGE" value="简单的优化一下结构" />
+    <MESSAGE value="将token验证提取出来" />
+    <option name="LAST_COMMIT_MESSAGE" value="将token验证提取出来" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -160,33 +194,13 @@
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
-          <line>36</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/controller/usercontroller.go</url>
-          <line>58</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/main.go</url>
-          <line>39</line>
+          <line>42</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/controller/publishController.go</url>
-          <line>68</line>
-          <option name="timeStamp" value="17" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/controller/feedcontroller.go</url>
-          <line>17</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/controller/publishController.go</url>
-          <line>27</line>
+          <line>28</line>
           <option name="timeStamp" value="21" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -215,29 +229,24 @@
           <option name="timeStamp" value="31" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/controller/relationcontroller.go</url>
-          <line>16</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/service/user.go</url>
-          <line>26</line>
-          <option name="timeStamp" value="34" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/../../../GOPATH/pkg/mod/gorm.io/gorm@v1.23.5/gorm.go</url>
           <line>82</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/config/db_config.go</url>
-          <line>18</line>
-          <option name="timeStamp" value="38" />
+          <url>file://$PROJECT_DIR$/controller/feedcontroller.go</url>
+          <line>43</line>
+          <option name="timeStamp" value="42" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/../../../GOPATH/pkg/mod/gorm.io/gorm@v1.23.5/gorm.go</url>
-          <line>116</line>
-          <option name="timeStamp" value="39" />
+          <url>file://$PROJECT_DIR$/ffmpeg_test.go</url>
+          <line>15</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/controller/publishController.go</url>
+          <line>73</line>
+          <option name="timeStamp" value="47" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -9,6 +9,7 @@ import (
 	uuid "github.com/iris-contrib/go.uuid"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
+	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"io/ioutil"
 	"mime/multipart"
 	"os"
@@ -20,7 +21,7 @@ import (
 type PublishController struct {
 }
 
-const FILEMAXSIZE = 5 << 20 //最多传输5M大小的文件
+const FILEMAXSIZE = 50 << 20 //最多传输50M大小的文件
 
 // /public/action 投稿接口
 func (pc *PublishController) PostAction(ctx iris.Context) mvc.Result {
@@ -66,10 +67,34 @@ func (pc *PublishController) PostAction(ctx iris.Context) mvc.Result {
 			},
 		}
 	}
+
+	//TODO 创建本地视频资源以及本地图片资源
 	playerurl := CreatePath(fh)
+	index := strings.LastIndexAny(playerurl, ".")
+	pictureurl := playerurl[:index+1] + "jpg"
 	Log.Println("生成url:", playerurl)
+	Log.Println("Picture utl:", pictureurl)
 	//target, err := os.OpenFile(AppConfig.GetString("resources.video.path")+string(os.PathSeparator)+playerurl, os.O_EXCL|os.O_CREATE, 0666)
-	target, err := os.Create(AppConfig.GetString("resources.video.path") + string(os.PathSeparator) + playerurl)
+	videoname := AppConfig.GetString("resources.video.path") + string(os.PathSeparator) + playerurl
+	picturename := AppConfig.GetString("resources.picture.path") + string(os.PathSeparator) + pictureurl
+
+	index = strings.LastIndexAny(picturename, string(os.PathSeparator))
+	filepath := picturename[:index]
+	if _, err := os.Stat(filepath); err != nil {
+		Log.Println("目录不存在，正在创建目录:" + filepath)
+		os.MkdirAll(filepath, 0766)
+		Log.Println("目录创建完成")
+	}
+
+	index = strings.LastIndexAny(videoname, string(os.PathSeparator))
+	filepath = videoname[:index]
+	if _, err := os.Stat(filepath); err != nil {
+		Log.Println("目录不存在，正在创建目录:" + filepath)
+		os.MkdirAll(filepath, 0766)
+		Log.Println("目录创建完成")
+	}
+	target, err := os.Create(videoname)
+
 	if err != nil {
 		Log.Println(err)
 		return mvc.Response{
@@ -80,10 +105,19 @@ func (pc *PublishController) PostAction(ctx iris.Context) mvc.Result {
 		}
 	}
 	target.Write(content)
-	defer target.Close()
+	target.Close()
+
+	err = ffmpeg_go.Input(videoname).Output(picturename, ffmpeg_go.KwArgs{"vframes": "1"}).Run()
+	if err != nil {
+		Log.Println(err)
+		return mvc.Response{
+			Object: statusResponse{
+				Status_Code: 502,
+				Status_Msg:  "封面生成失败",
+			},
+		}
+	}
 	//Database.AutoMigrate(&service.Video{}) //若数据库表不存在则初始化数据库表
-	//target.Write(content)
-	//target.Close()
 	f.Close()
 	var video service.Video
 	video.Video_location = playerurl
@@ -144,7 +178,7 @@ func (pc *PublishController) GetList(ctx iris.Context) mvc.Result {
 	}
 }
 
-//生成用户投稿文件路径
+//生成用户投稿文件路径 index为.索引值
 func CreatePath(fh *multipart.FileHeader) string {
 	Log.Println("正在生成投稿文件路径")
 	now_time := time.Now()

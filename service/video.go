@@ -34,8 +34,8 @@ func GetVideoJSON(userid int, video Video) VideoJSON {
 	v.Id = video.Video_id
 	//查询用户信息
 	v.Author = GetUser(userid, video.Video_authorid)
-	v.Play_url = "http://139.9.43.9:8878/douyin/video/" + strings.ReplaceAll(video.Video_location, "\\", "/")
-	v.Cover_url = "http://139.9.43.9:8878/douyin/picture/" + strings.ReplaceAll(video.Video_picture_location, "\\", "/")
+	v.Play_url = "http://101.33.238.244:8878/douyin/video/" + strings.ReplaceAll(video.Video_location, "\\", "/")
+	v.Cover_url = "http://101.33.238.244:8878/douyin/picture/" + strings.ReplaceAll(video.Video_picture_location, "\\", "/")
 	//获取视频点赞数
 	row := config.Database.Raw("select count(*) from `watch_praises` where `praise_user_id`=? and `praise_video_id`=?", userid, video.Video_id).Row()
 	row.Scan(&v.Favorite_count)

@@ -30,7 +30,7 @@ func GetCommentList(userid, videoid int) []CommentJSON {
 			Id:          comment.Comment_id,
 			User:        GetUser(userid, comment.Comment_user_id),
 			Content:     comment.Comment_content,
-			Create_date: comment.Comment_latest_time.Format("2006-01-02 15:04:05"),
+			Create_date: comment.Comment_latest_time.Add(8 * time.Hour).Format("2006-01-02 15:04:05"),
 		})
 	}
 	return commentlist
