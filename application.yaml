@@ -25,3 +25,8 @@ resources:
   picture:
     path: D:\Hz_go\github\douyin_mine\picture
     defaultrelativepath: 0\0\default.jpg
+
+cos:
+  SecretId: secretid
+  SecretKey: secretkey
+  url: cosurl
